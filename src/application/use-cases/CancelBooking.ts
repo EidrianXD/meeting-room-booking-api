@@ -1,5 +1,5 @@
+import { ForbiddenError } from "../../domain/errors/ForbiddenError";
 import { NotFoundError } from "../../domain/errors/NotFoundError";
-import { UnauthorizedError } from "../../domain/errors/UnauthorizedError";
 import { IBookingRepository } from "../../domain/repositories/IBookingRepository";
 
 export interface CancelBookingInput {
@@ -17,7 +17,7 @@ export class CancelBooking {
     }
 
     if (booking.userId !== input.userId) {
-      throw new UnauthorizedError("Apenas o criador da reserva pode cancelá-la.");
+      throw new ForbiddenError("Apenas o criador da reserva pode cancelá-la.");
     }
 
     await this.bookingRepository.delete(booking.id);

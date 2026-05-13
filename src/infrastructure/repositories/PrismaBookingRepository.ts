@@ -1,5 +1,6 @@
 import type { PrismaClient, Booking as PrismaBooking } from "@prisma/client";
 import { Booking } from "../../domain/entities/Booking";
+import { BookingConflictError } from "../../domain/errors/BookingConflictError";
 import { IBookingRepository } from "../../domain/repositories/IBookingRepository";
 
 export class PrismaBookingRepository implements IBookingRepository {
@@ -27,18 +28,34 @@ export class PrismaBookingRepository implements IBookingRepository {
   }
 
   async create(booking: Booking): Promise<Booking> {
-    const row = await this.prisma.booking.create({
-      data: {
-        id: booking.id,
-        roomId: booking.roomId,
-        userId: booking.userId,
-        title: booking.title,
-        startTime: booking.startTime,
-        endTime: booking.endTime,
-        createdAt: booking.createdAt,
-      },
+    return this.prisma.$transaction(async (tx) => {
+      const sameRoom = await tx.booking.findMany({
+        where: {
+          roomId: booking.roomId,
+          startTime: { lt: booking.endTime },
+          endTime: { gt: booking.startTime },
+        },
+      });
+
+      const hasConflict = sameRoom.some((row) => booking.conflictsWith(this.toDomain(row)));
+      if (hasConflict) {
+        throw new BookingConflictError();
+      }
+
+      const created = await tx.booking.create({
+        data: {
+          id: booking.id,
+          roomId: booking.roomId,
+          userId: booking.userId,
+          title: booking.title,
+          startTime: booking.startTime,
+          endTime: booking.endTime,
+          createdAt: booking.createdAt,
+        },
+      });
+
+      return this.toDomain(created);
     });
-    return this.toDomain(row);
   }
 
   async delete(id: string): Promise<void> {

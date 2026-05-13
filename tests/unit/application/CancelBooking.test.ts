@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { CancelBooking } from "../../../src/application/use-cases/CancelBooking";
 import { Booking } from "../../../src/domain/entities/Booking";
 import { NotFoundError } from "../../../src/domain/errors/NotFoundError";
-import { UnauthorizedError } from "../../../src/domain/errors/UnauthorizedError";
+import { ForbiddenError } from "../../../src/domain/errors/ForbiddenError";
 import { InMemoryBookingRepository } from "../../helpers/InMemoryBookingRepository";
 
 describe("CancelBooking", () => {
@@ -35,12 +35,12 @@ describe("CancelBooking", () => {
     expect(repo.items).toHaveLength(0);
   });
 
-  it("lança UnauthorizedError quando o solicitante não é o criador", async () => {
+  it("lança ForbiddenError quando o solicitante não é o criador", async () => {
     seedBooking("user-1");
 
     await expect(
       useCase.execute({ bookingId: "booking-1", userId: "user-2" }),
-    ).rejects.toBeInstanceOf(UnauthorizedError);
+    ).rejects.toBeInstanceOf(ForbiddenError);
 
     expect(repo.items).toHaveLength(1);
   });
