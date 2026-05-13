@@ -1,0 +1,41 @@
+// Schema do Prisma para o sistema de agendamento de salas.
+// Datasource: SQLite local em prisma/dev.db.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Room {
+  id       String    @id
+  name     String
+  bookings Booking[]
+}
+
+model User {
+  id       String    @id @default(uuid())
+  username String    @unique
+  password String
+  bookings Booking[]
+}
+
+model Booking {
+  id        String   @id @default(uuid())
+  title     String
+  startTime DateTime
+  endTime   DateTime
+  createdAt DateTime @default(now())
+
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@index([roomId, startTime, endTime])
+  @@index([userId])
+}

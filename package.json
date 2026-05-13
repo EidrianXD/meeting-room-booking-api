@@ -2,11 +2,11 @@
   "name": "meeting-room-booking-backend",
   "version": "1.0.0",
   "description": "Sistema de agendamento de salas de reunião - API REST",
-  "main": "dist/main.js",
+  "main": "dist/src/main.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
     "build": "tsc",
-    "start": "node dist/main.js",
+    "start": "node dist/src/main.js",
     "test": "vitest run",
     "test:watch": "vitest"
   },
