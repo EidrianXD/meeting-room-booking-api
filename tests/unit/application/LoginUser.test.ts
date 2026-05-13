@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import jwt from "jsonwebtoken";
 import { LoginUser, FindUserByUsername } from "../../../src/application/use-cases/LoginUser";
 import { User } from "../../../src/domain/entities/User";
-import { AppError } from "../../../src/domain/errors/AppError";
+import { UnauthorizedError } from "../../../src/domain/errors/UnauthorizedError";
 
 const SECRET = "test-secret";
 
@@ -30,7 +30,7 @@ describe("LoginUser", () => {
 
     await expect(
       useCase.execute({ username: "ghost", password: "123456" }),
-    ).rejects.toBeInstanceOf(AppError);
+    ).rejects.toBeInstanceOf(UnauthorizedError);
   });
 
   it("lança erro quando a senha está incorreta", async () => {
@@ -39,6 +39,6 @@ describe("LoginUser", () => {
 
     await expect(
       useCase.execute({ username: "john", password: "errada" }),
-    ).rejects.toBeInstanceOf(AppError);
+    ).rejects.toBeInstanceOf(UnauthorizedError);
   });
 });

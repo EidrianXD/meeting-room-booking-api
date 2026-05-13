@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { User } from "../../domain/entities/User";
-import { AppError } from "../../domain/errors/AppError";
+import { UnauthorizedError } from "../../domain/errors/UnauthorizedError";
 
 export type FindUserByUsername = (username: string) => Promise<User | null>;
 
@@ -24,7 +24,7 @@ export class LoginUser {
   async execute(input: LoginUserInput): Promise<LoginUserOutput> {
     const user = await this.findUserByUsername(input.username);
     if (!user || user.password !== input.password) {
-      throw new AppError("Credenciais inválidas.", 401);
+      throw new UnauthorizedError("Credenciais inválidas.");
     }
 
     const token = jwt.sign(
