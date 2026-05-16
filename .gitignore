@@ -4,7 +4,6 @@ node_modules/
 # Build
 dist/
 build/
-package-lock.json
 
 # Variáveis de ambiente
 .env
