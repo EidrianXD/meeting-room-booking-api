@@ -1,4 +1,5 @@
 import "dotenv/config";
+import cors from "cors";
 import express from "express";
 
 import { CancelBooking } from "./application/use-cases/CancelBooking";
@@ -55,7 +56,18 @@ async function bootstrap(): Promise<void> {
 
   const authMiddleware = makeAuthMiddleware(jwtSecret);
 
+  const allowedOrigins = (process.env.CORS_ORIGINS ?? "")
+    .split(",")
+    .map((o) => o.trim().replace(/\/+$/, ""))
+    .filter((o) => o.length > 0);
+
   const app = express();
+  app.use(
+    cors({
+      origin: allowedOrigins.length > 0 ? allowedOrigins : true,
+      credentials: true,
+    }),
+  );
   app.use(express.json());
 
   app.get("/health", (_req, res) => {
