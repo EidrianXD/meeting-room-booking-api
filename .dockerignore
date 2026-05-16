@@ -1,0 +1,45 @@
+# Dependências e artefatos locais
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build
+dist
+build
+coverage
+.nyc_output
+
+# Variáveis de ambiente (NUNCA copiar .env para a imagem)
+.env
+.env.*
+!.env.example
+
+# Banco SQLite local de desenvolvimento (não vai para a imagem)
+prisma/dev.db
+prisma/dev.db-journal
+
+# Git e config local
+.git
+.gitignore
+.gitattributes
+
+# Próprio Docker / orquestração
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Testes (não vão para runtime)
+tests
+
+# Editores / OS
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Docs e ferramentas locais
+README.md
+.claude
