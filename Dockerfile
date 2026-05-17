@@ -60,13 +60,14 @@ RUN apt-get update -y \
 
 WORKDIR /app
 
-# Diretório dedicado para o banco SQLite (volume montado em runtime).
-# Em Fase 6 (Postgres), este diretório deixa de ser necessário.
-RUN mkdir -p /app/data && chown -R node:node /app
+# Permissões para o usuário não-root (`node`).
+RUN chown -R node:node /app
 
+# `DATABASE_URL` é obrigatório em runtime (injetado pelo Compose/Jenkins).
+# Não há default — falhar cedo (no entrypoint) é melhor do que rodar
+# com URL falsa contra um Postgres inexistente.
 ENV NODE_ENV=production \
-    PORT=3000 \
-    DATABASE_URL=file:/app/data/dev.db
+    PORT=3000
 
 # Copia artefatos prontos do stage de build (já pruned).
 COPY --chown=node:node --from=build /app/node_modules ./node_modules

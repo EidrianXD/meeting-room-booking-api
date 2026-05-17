@@ -1,5 +1,5 @@
 // Schema do Prisma para o sistema de agendamento de salas.
-// Datasource: SQLite local em prisma/dev.db.
+// Datasource: PostgreSQL (Fase 6 — graduação de SQLite -> Postgres).
 
 generator client {
   provider      = "prisma-client-js"
@@ -9,7 +9,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
