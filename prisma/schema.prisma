@@ -2,7 +2,10 @@
 // Datasource: SQLite local em prisma/dev.db.
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // "native" mantém o engine do host de desenvolvimento (Windows/macOS/Linux).
+  // "debian-openssl-3.0.x" é o target da imagem node:20-slim usada no runtime.
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
