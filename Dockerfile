@@ -51,7 +51,10 @@ FROM node:${NODE_VERSION}-slim AS runtime
 
 # OpenSSL é exigido pelo binário do query engine do Prisma.
 # wget é usado pelo HEALTHCHECK.
+# `apt-get upgrade` aplica os patches de segurança disponíveis na base
+# Debian (necessário para passar no quality gate do Trivy).
 RUN apt-get update -y \
+ && apt-get upgrade -y \
  && apt-get install -y --no-install-recommends openssl ca-certificates wget \
  && rm -rf /var/lib/apt/lists/*
 
